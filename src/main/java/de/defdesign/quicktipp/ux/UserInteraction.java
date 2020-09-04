@@ -1,10 +1,12 @@
 package de.defdesign.quicktipp.ux;
 
 import de.defdesign.quicktipp.numberGenerators.Blacklist;
-import de.defdesign.quicktipp.numberGenerators.Tipp;
 import de.defdesign.quicktipp.numberGenerators.TippEuroJackpot;
+import de.defdesign.quicktipp.numberGenerators.TippLotto;
 
 import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class UserInteraction {
     public void mainUserInterface(){
@@ -63,6 +65,7 @@ public class UserInteraction {
                     System.out.println("Lösche die Blacklist - einen Moment Geduld bitte.");
                     Blacklist.getBlacklist().blacklistList.clear();
                     UxUtilities.clearScreen();
+                    break;
                 }
                 System.out.println(Blacklist.getBlacklist().handleNumber(input));
                 UxUtilities.waitSeconds(3000);
@@ -74,14 +77,49 @@ public class UserInteraction {
                     UxUtilities.clearScreen();
                 }
         }
+        Blacklist.getBlacklist().saveBlacklistToDisk();
     }
 
     public void euroJackpotUserInterface() {
-        Tipp euroJackpot = new TippEuroJackpot();
-        euroJackpot.generateTipp();
+        while (true) {
+            TippEuroJackpot euroJackpot = new TippEuroJackpot();
+            Set<Integer> eurotipp5of50 = new TreeSet<>(euroJackpot.generateTipp(euroJackpot, euroJackpot.getMAX_VALUE_5_OF_50(), euroJackpot.getMAX_SIZE_5_OF_50()));
+            Set<Integer> eurotipp2of10 = new TreeSet<>(euroJackpot.generateTipp(euroJackpot, euroJackpot.getMAX_VALUE_2_OF_10(), euroJackpot.getMAX_SIZE_2_OF_10()));
+            System.out.println("Deine generierte Tippreihe für '5 aus 50':");
+            eurotipp5of50.forEach(x -> System.out.print(x + " "));
+            System.out.println("Deine generierte Tippreihe für '2 aus 10':");
+            eurotipp2of10.forEach(x -> System.out.print(x + " "));
+            UxUtilities.separator();
+            System.out.println("Eine weitere Tippreihe generieren? (j/n)");
+            Scanner sc = new Scanner(System.in);
+            String choice = sc.nextLine();
+            if (choice.toLowerCase().equals("n")) {
+                break;
+            } else {
+                sc.close();
+            }
+        }
+        UxUtilities.waitSeconds(3000);
+        UxUtilities.clearScreen();
     }
 
     public void lottoUserInterface() {
+        TippLotto lotto = new TippLotto();
+        while (true) {
+            Set<Integer> lottoTipp = new TreeSet<>(lotto.generateTipp(lotto, lotto.getMAX_VALUE(), lotto.getMAX_SIZE()));
+            System.out.println("Deine generierte Tippreihe für '6 aus 49':");
+            lottoTipp.forEach(x -> System.out.print(x + " "));
+            System.out.println("Eine weitere Tippreihe generieren? (j/n)");
+            Scanner sc = new Scanner(System.in);
+            String choice = sc.nextLine();
+            if (choice.toLowerCase().equals("n")) {
+                break;
+            } else {
+                sc.close();
+            }
+        }
+        UxUtilities.waitSeconds(3000);
+        UxUtilities.clearScreen();
     }
 
 }

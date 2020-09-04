@@ -1,5 +1,7 @@
 package de.defdesign.quicktipp.numberGenerators;
 
+import de.defdesign.quicktipp.persistence.FileService;
+
 import java.util.*;
 
 public class Blacklist extends Tipp {
@@ -16,6 +18,17 @@ public class Blacklist extends Tipp {
             Blacklist.blacklist = new Blacklist ();
         }
         return Blacklist.blacklist;
+    }
+
+    public void retrieveBlacklistFromDisk(){
+        FileService fs = new FileService();
+        fs.fileInitializer();
+        this.blacklistList = fs.readFromDisk();
+    }
+
+    public void saveBlacklistToDisk(){
+        FileService fs = new FileService();
+        fs.saveToDisk(this.blacklistList);
     }
 
     public String handleNumber(int blacklistNumber) {

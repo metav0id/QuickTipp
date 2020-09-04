@@ -9,10 +9,6 @@ public class Tipp implements tippable{
         return tippSet.size() == tipp.size();
     }
 
-    public boolean rangeCheck(TreeSet<Integer> tippSet, int max) {
-        return ((tippSet.first() >1 ) && (tippSet.last()) <= max);
-    }
-
     public boolean blacklistCheck(TreeSet<Integer> tippSet) {
         Set<Integer> aggregatedSet = new TreeSet<>(Blacklist.getBlacklist().blacklistList);
         aggregatedSet.addAll(tippSet);
