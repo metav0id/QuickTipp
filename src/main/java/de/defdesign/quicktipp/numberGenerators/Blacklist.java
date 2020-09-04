@@ -4,6 +4,10 @@ import de.defdesign.quicktipp.persistence.FileService;
 
 import java.util.*;
 
+/**
+ * List of undesirable numbers for generation of lotto-numbers
+ */
+
 public class Blacklist extends Tipp {
 
     private static Blacklist blacklist;
@@ -20,16 +24,30 @@ public class Blacklist extends Tipp {
         return Blacklist.blacklist;
     }
 
+    /**
+     * loads blacklist from previous sessions from disk
+     */
+
     public void retrieveBlacklistFromDisk(){
         FileService fs = new FileService();
-        fs.fileInitializer();
+        fs.fileInitializer("blacklist.usr");
         this.blacklistList = fs.readFromDisk();
     }
+
+    /**
+     * replaces blacklist on disk with current blacklist
+     */
 
     public void saveBlacklistToDisk(){
         FileService fs = new FileService();
         fs.saveToDisk(this.blacklistList);
     }
+
+    /**
+     * handles input for blacklist and automatically adds and removes depending on state of blacklist
+     * @param blacklistNumber (number added by user)
+     * @return String containing comment for user to feedback on action taken
+     */
 
     public String handleNumber(int blacklistNumber) {
         if (!this.dupeCheck(blacklistList)) {

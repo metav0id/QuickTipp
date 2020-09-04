@@ -8,6 +8,10 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
 
+/**
+ * User Interface zur Darstellung des Hauptmenus
+ */
+
 public class UserInteraction {
     public void mainUserInterface(){
         do {
@@ -40,6 +44,10 @@ public class UserInteraction {
             }
         } while (true);
     }
+
+    /**
+     * User Interface für die Generierung und Änderung der Unglückszahlen aka Blacklist
+     */
 
     public void blackListUserInterface(){
         while (true) {
@@ -80,6 +88,10 @@ public class UserInteraction {
         Blacklist.getBlacklist().saveBlacklistToDisk();
     }
 
+    /**
+     * User Interface für die Generierung der Euro-Jackpot-Zahlen
+     */
+
     public void euroJackpotUserInterface() {
         while (true) {
             TippEuroJackpot euroJackpot = new TippEuroJackpot();
@@ -102,6 +114,10 @@ public class UserInteraction {
         UxUtilities.waitSeconds(3000);
         UxUtilities.clearScreen();
     }
+
+    /**
+     * User Interface für die Generierung der 6 aus 49 -Zahlen
+     */
 
     public void lottoUserInterface() {
         TippLotto lotto = new TippLotto();

@@ -1,8 +1,5 @@
 package de.defdesign.quicktipp.numberGenerators;
 
-import java.util.Set;
-import java.util.TreeSet;
-
 public class TippEuroJackpot extends Tipp {
     private final int MAX_SIZE_5_OF_50 = 5;
     private final int MAX_SIZE_2_OF_10 = 2;

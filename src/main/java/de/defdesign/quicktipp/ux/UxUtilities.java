@@ -2,6 +2,10 @@ package de.defdesign.quicktipp.ux;
 
 public class UxUtilities {
 
+    /**
+     * Einfache Utility-Methoden für die Darstellung der User-Interfaces
+     */
+
     public static void clearScreen() {
         for(int i = 0; i<20; i++) {
             System.out.println();
@@ -12,7 +16,7 @@ public class UxUtilities {
         try {
             Thread.sleep(miliseconds);
         } catch (InterruptedException ie) {
-            // can't happen
+            // kann nicht auftreten, da lediglich als Warteschleife genutzt
         }
     }
 
