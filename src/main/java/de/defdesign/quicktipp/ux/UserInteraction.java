@@ -1,9 +1,11 @@
 package de.defdesign.quicktipp.ux;
 
+import de.defdesign.quicktipp.log.Logger;
 import de.defdesign.quicktipp.numberGenerators.Blacklist;
 import de.defdesign.quicktipp.numberGenerators.TippEuroJackpot;
 import de.defdesign.quicktipp.numberGenerators.TippLotto;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
@@ -40,7 +42,7 @@ public class UserInteraction {
                     System.out.println("Falsche Eingabe. Bitte tippe eine der in eckigen Klammern gesetzten Optionen ein " +
                             "und bestätige mit <enter>");
                     UxUtilities.waitSeconds(3000);
-                    UxUtilities.clearScreen();
+
             }
         } while (true);
     }
@@ -50,39 +52,50 @@ public class UserInteraction {
      */
 
     public void blackListUserInterface(){
+
         while (true) {
-            System.out.println("Deine aktuelle Blacklist:");
-            if (!(Blacklist.getBlacklist().blacklistList.size() == 0)) {
-                Blacklist.getBlacklist().blacklistList.forEach(x -> System.out.print(x + " "));
+
+            // Check, ob Blacklist leer ist oder nicht -> angepasste Ausgabe
+
+            if (!(Blacklist.getBlacklist().getBlacklistList().size() == 0)) {
+                System.out.println("Deine aktuelle Blacklist:");
+                Blacklist.getBlacklist().getBlacklistList().forEach(x -> System.out.print(x + " "));
             } else {
                 System.out.println("Deine Blacklist ist derzeit leer");
             }
+
+            // Auswahloptionen
+            Scanner choice = new Scanner(System.in);
+            int input;
             System.out.println();
             System.out.println("Gib die Zahl zwischen 1 und 50 ein, die du entfernen oder hinzufügen möchtest, " +
                     "'99' um die Blacklist zu leeren oder '0', um die Änderungen an der Blacklist abzuschließen:");
             try {
-                Scanner choice = new Scanner(System.in);
-                int input = choice.nextInt();
+                input = choice.nextInt();
                 if (input == 0) {
                     System.out.println("Verlasse Blacklistditor - einen Moment Geduld bitte.");
-                    UxUtilities.waitSeconds(3000);
-                    UxUtilities.clearScreen();
+                    UxUtilities.waitSeconds(300);
+
                     break;
                     }
                 if (input == 99) {
                     System.out.println("Lösche die Blacklist - einen Moment Geduld bitte.");
-                    Blacklist.getBlacklist().blacklistList.clear();
-                    UxUtilities.clearScreen();
-                    break;
-                }
-                System.out.println(Blacklist.getBlacklist().handleNumber(input));
-                UxUtilities.waitSeconds(3000);
-                UxUtilities.clearScreen();
-                } catch (IllegalArgumentException iae) {
-                    System.out.println("Falsche Eingabe! Bitte gebe eine Zahl zwischen 1 und 50 für einen Eintrag " +
-                            "in der Blacklist ein oder eine '0', um die Blacklisterstellung zu verlassen.");
-                    UxUtilities.waitSeconds(3000);
-                    UxUtilities.clearScreen();
+                    Blacklist.getBlacklist().getBlacklistList().clear();
+                    UxUtilities.waitSeconds(300);
+                    UxUtilities.separator();
+                    continue;
+                    }
+
+                    System.out.println(Blacklist.getBlacklist().handleNumber(input));
+                    UxUtilities.waitSeconds(300);
+                    UxUtilities.separator();
+
+                } catch (InputMismatchException iae) {
+                    System.err.println("Falsche Eingabe! Bitte gebe eine Zahl zwischen 1 und 50, '0' oder '99' ein!");
+                    new Logger().log(iae.toString());
+                    UxUtilities.waitSeconds(300);
+                    UxUtilities.separator();
+
                 }
         }
         Blacklist.getBlacklist().saveBlacklistToDisk();
@@ -93,26 +106,27 @@ public class UserInteraction {
      */
 
     public void euroJackpotUserInterface() {
+        TippEuroJackpot euroJackpot = new TippEuroJackpot();
+        Scanner sc = new Scanner(System.in);
         while (true) {
-            TippEuroJackpot euroJackpot = new TippEuroJackpot();
+            UxUtilities.separator();
             Set<Integer> eurotipp5of50 = new TreeSet<>(euroJackpot.generateTipp(euroJackpot, euroJackpot.getMAX_VALUE_5_OF_50(), euroJackpot.getMAX_SIZE_5_OF_50()));
             Set<Integer> eurotipp2of10 = new TreeSet<>(euroJackpot.generateTipp(euroJackpot, euroJackpot.getMAX_VALUE_2_OF_10(), euroJackpot.getMAX_SIZE_2_OF_10()));
             System.out.println("Deine generierte Tippreihe für '5 aus 50':");
             eurotipp5of50.forEach(x -> System.out.print(x + " "));
+            System.out.println();
             System.out.println("Deine generierte Tippreihe für '2 aus 10':");
             eurotipp2of10.forEach(x -> System.out.print(x + " "));
+            System.out.println();
             UxUtilities.separator();
             System.out.println("Eine weitere Tippreihe generieren? (j/n)");
-            Scanner sc = new Scanner(System.in);
             String choice = sc.nextLine();
-            if (choice.toLowerCase().equals("n")) {
+            if (!choice.toLowerCase().equals("j")) {
                 break;
-            } else {
-                sc.close();
             }
         }
-        UxUtilities.waitSeconds(3000);
-        UxUtilities.clearScreen();
+        UxUtilities.waitSeconds(300);
+        UxUtilities.separator();
     }
 
     /**
@@ -121,21 +135,20 @@ public class UserInteraction {
 
     public void lottoUserInterface() {
         TippLotto lotto = new TippLotto();
+        Scanner sc = new Scanner(System.in);
         while (true) {
+            UxUtilities.separator();
             Set<Integer> lottoTipp = new TreeSet<>(lotto.generateTipp(lotto, lotto.getMAX_VALUE(), lotto.getMAX_SIZE()));
             System.out.println("Deine generierte Tippreihe für '6 aus 49':");
             lottoTipp.forEach(x -> System.out.print(x + " "));
             System.out.println("Eine weitere Tippreihe generieren? (j/n)");
-            Scanner sc = new Scanner(System.in);
             String choice = sc.nextLine();
             if (choice.toLowerCase().equals("n")) {
                 break;
-            } else {
-                sc.close();
             }
         }
-        UxUtilities.waitSeconds(3000);
-        UxUtilities.clearScreen();
+        UxUtilities.waitSeconds(300);
+        UxUtilities.separator();
     }
 
 }

@@ -1,5 +1,7 @@
 package de.defdesign.quicktipp.ux;
 
+import java.sql.SQLOutput;
+
 public class UxUtilities {
 
     /**
@@ -22,5 +24,7 @@ public class UxUtilities {
 
     public static void separator() {
         System.out.println("----------------------------------------------------");
+        System.out.println("----------------------------------------------------");
+        System.out.println();
     }
 }

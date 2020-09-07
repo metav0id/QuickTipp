@@ -13,13 +13,14 @@ import java.util.TreeSet;
 public class FileService {
 
     /**
-     * Writes a Set to harddisk
-     * @param set containing Integer values
+     * Writes blacklist to harddisk
+     * @param set containing Integer values, String containing fileName to be written
      */
 
-    public void saveToDisk(Set<Integer> set) {
-        try (PrintWriter writer = new PrintWriter(new File("blacklist.usr"))) {
+    public void saveToDisk(Set<Integer> set, String fileName) {
+        try (PrintWriter writer = new PrintWriter(new File(fileName))) {
             set.forEach(x -> writer.println(x));
+            writer.flush();
         } catch (IOException ioe) {
             new Logger().log(ioe.toString());
         }
@@ -31,9 +32,9 @@ public class FileService {
      */
 
 
-    public Set<Integer> readFromDisk() {
+    public Set<Integer> readFromDisk(String fileName) {
         TreeSet<Integer> set = new TreeSet<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("blacklist.usr"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             while (reader.ready()) {
                 set.add(Integer.parseInt(reader.readLine()));
             }
@@ -44,8 +45,8 @@ public class FileService {
     }
 
     /**
-     * ensures that a specific file exists and can be read
-     * @param fileName
+     * verifies that a specific file exists and creates the file if it doesn't
+     * @param fileName containing name of file to be read
      */
 
     public void fileInitializer(String fileName){
@@ -65,9 +66,10 @@ public class FileService {
      */
 
     public void log(String errorLog) {
-        try (PrintWriter writer = new PrintWriter(new File("log.txt"))) {
-            writer.append(LocalDateTime.now().toString());
-            writer.append(errorLog);
+        try (PrintWriter writer = new PrintWriter(new FileOutputStream(new File("log.txt"), true))) {
+            writer.append(LocalDateTime.now().toString()).append(": ");
+            writer.append(errorLog).append("\n");
+            writer.flush();
         } catch (IOException ioe) {
             new Logger().log(ioe.toString());
         }
